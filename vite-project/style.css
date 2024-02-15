@@ -5,8 +5,8 @@
 }
 
 :root {
-  --primary-color: #22254b;
-  --secondary-color: #373b69;
+  --primary-color: #292929;
+  --secondary-color: #222224;
 }
 
 body {
@@ -16,10 +16,41 @@ body {
 }
 
 header {
-  padding: 1rem;
+  padding: 2rem;
   display: flex;
   justify-content: flex-end;
   background-color: var(--secondary-color);
+  /* height: 150px; */
+
+  z-index: 1000;
+  width: 100%;
+
+}
+
+#selectgenre{
+  background-color: transparent;
+  color: lightgray;
+  position: absolute;
+  border-radius: 3px;
+  left: 400px;
+  height: 35px;
+  width: 150px;
+  margin-right: 10px;
+
+}
+
+#selectgenre .genre{
+  height: 20px;
+  background-color: var(--secondary-color);
+  border-bottom: solid 2px lightgray;
+  font-size: 20px;
+  padding: 10px;
+  line-height: 1.5px;
+}
+
+#selectgenre .genre:hover {
+  background-color: lightgray;
+  color: var(--secondary-color);
 }
 
 #popular {
@@ -43,6 +74,7 @@ header {
 #upcoming {
   position: absolute;
   left: 200px;
+  /* top: 10px; */
   border-radius: 16px;
   border: solid 2px #162938;
   width: 150px;
@@ -58,7 +90,7 @@ header {
   transform: translateY(-6px);
 }
 
-.search {
+#search {
   background-color: transparent;
   border: 2px solid var(--primary-color);
   padding: 0.5rem 1rem;
@@ -66,15 +98,44 @@ header {
   font-size: 1rem;
   color: white;
   font-family: inherit;
+  width: 320px;
+  height: 40px;
+  /* margin-right: 20px; */
 }
 
-.search:focus {
+#search:focus {
   outline: 0;
   background-color: var(--primary-color);
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.5);
 }
 
-.search::placeholder {
-  color: #7378c5;
+#search::placeholder {
+  color: lightslategray;
+}
+
+i{
+  font-size: 25px;
+  color: black;
+  margin-top: 5px;
+  margin-right: 2px;
+  /* position: absolute;
+  left: 20px; */
+}
+#btn {
+  border-radius: 8px;
+  /* background-color: rgb(186, 10, 10); */
+  border: solid 2px var(--primary-color);
+  color: lightslategray;
+  font-weight: 500;
+  font-size: large;
+  border-bottom-right-radius: 50px;
+  border-top-right-radius: 50px;
+  position: absolute;
+  right: 32px;
+  height: 40px;
+  width: 50px;
+  background-color:transparent ;
+  cursor: pointer;
 }
 
 main {
@@ -88,10 +149,11 @@ main {
   height: 530px;
   margin: 1rem;
   border-radius: 3px;
-  box-shadow: 0.2px4px 5px rgba(0, 0, 0, 0.1);
+  box-shadow: 5px 5px 10px rgba(159, 159, 159, 0.5);
   background-color: var(--secondary-color);
   position: relative;
   overflow: hidden;
+  border-radius: 8px;
 }
 
 .movie img {
@@ -106,10 +168,16 @@ main {
   justify-content: space-between;
   padding: 0.5rem 1rem 1rem;
   letter-spacing: 0.5px;
+  /* overflow-y: auto; */
+  /* overflow: hidden;
+  max-height: 30px; */
+  font-size: 16px;
 }
 
 .movie-info h3 {
   margin-top: 0;
+  overflow-y: auto;
+  max-height: 100%;
 }
 .movie-info span {
   background-color: var(--primary-color);
@@ -139,6 +207,7 @@ main {
   transform: translateY(-115%);
   transition: transform 0.9s ease;
   height: 100%;
+  overflow-y: auto;
 }
 
 .movie:hover .overview {

@@ -4,6 +4,87 @@ const popularbtn = document.getElementById("popular");
 const imgUrl = "https://images.tmdb.org/t/p/w500";
 const main = document.getElementById("main");
 const upcomingMovies = document.getElementById("upcoming");
+const apiKey ='82852eff9923affa42136eb1e81e3ffd';
+const tags = document.getElementById('selectgenre');
+
+const genres =[
+     {
+        "id":28,
+        "name":"Action"
+     },
+     {
+        "id":12,
+        "name":"Adventure"
+     },
+     {
+        "id":16,
+        "name":"Animation"
+     },
+     {
+        "id":35,
+        "name":"Comedy"
+     },
+     {
+        "id":80,
+        "name":"Crime"
+     },
+     {
+        "id":99,
+        "name":"Documentary"
+     },
+     {
+        "id":18,
+        "name":"Drama"
+     },
+     {
+        "id":10751,
+        "name":"Family"
+     },
+     {
+        "id":14,
+        "name":"Fantasy"
+     },
+     {
+        "id":36,
+        "name":"History"
+     },
+     {
+        "id":27,
+        "name":"Horror"
+     },
+     {
+        "id":10402,
+        "name":"Music"
+     },
+     {
+        "id":9648,
+        "name":"Mystery"
+     },
+     {
+        "id":10749,
+        "name":"Romance"
+     },
+     {
+        "id":878,
+        "name":"Science Fiction"
+     },
+     {
+        "id":10770,
+        "name":"TV Movie"
+     },
+     {
+        "id":53,
+        "name":"Thriller"
+     },
+     {
+        "id":10752,
+        "name":"War"
+     },
+     {
+        "id":37,
+        "name":"Western"
+     }
+  ]
 
 btn.addEventListener("click", () => {
   main.innerHTML = "";
@@ -121,9 +202,8 @@ upcomingMovies.addEventListener("click", () => {
         const { name, poster_path, vote_average, overview } = series;
         movieDiv.classList.add("movie");
         movieDiv.innerHTML = `<img src="${
-          imgUrl + poster_path
-        }" alt="${name}" />
-  
+                              imgUrl + poster_path
+                            }" alt="${name}" />
                               <div class="movie-info">
                               <h3>${name}</h3>
                               <span class="${getColor(
@@ -139,3 +219,17 @@ upcomingMovies.addEventListener("click", () => {
     })
     .catch((err) => console.error("error:" + err));
 });
+
+setGenre();
+
+function setGenre(){
+    tags.innerHTML =''
+    genres.forEach(genre =>{
+      const tag = document.createElement('option')
+      tag.classList.add('genre')
+      tag.id=genre.id
+      tag.value = genre.name
+      tag.innerText = `${genre.name}`
+      tags.appendChild(tag)
+    })
+}
