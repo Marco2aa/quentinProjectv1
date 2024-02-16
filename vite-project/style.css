@@ -24,10 +24,9 @@ header {
 
   z-index: 1000;
   width: 100%;
-
 }
 
-#selectgenre{
+#selectgenre {
   background-color: transparent;
   color: lightgray;
   position: absolute;
@@ -36,10 +35,9 @@ header {
   height: 35px;
   width: 150px;
   margin-right: 10px;
-
 }
 
-#selectgenre .genre{
+#selectgenre .genre {
   height: 20px;
   background-color: var(--secondary-color);
   border-bottom: solid 2px lightgray;
@@ -92,7 +90,7 @@ header {
 
 #search {
   background-color: transparent;
-  border: 2px solid var(--primary-color);
+  border: 2px solid lightgrey;
   padding: 0.5rem 1rem;
   border-radius: 50px;
   font-size: 1rem;
@@ -106,16 +104,16 @@ header {
 #search:focus {
   outline: 0;
   background-color: var(--primary-color);
-  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.5);
+  box-shadow: 5px 5px 10px rgba(255, 255, 255, 0.5);
 }
 
 #search::placeholder {
   color: lightslategray;
 }
 
-i{
+i {
   font-size: 25px;
-  color: black;
+  color: lightgray;
   margin-top: 5px;
   margin-right: 2px;
   /* position: absolute;
@@ -124,7 +122,7 @@ i{
 #btn {
   border-radius: 8px;
   /* background-color: rgb(186, 10, 10); */
-  border: solid 2px var(--primary-color);
+  border: solid 2px lightgrey;
   color: lightslategray;
   font-weight: 500;
   font-size: large;
@@ -134,7 +132,7 @@ i{
   right: 32px;
   height: 40px;
   width: 50px;
-  background-color:transparent ;
+  background-color: transparent;
   cursor: pointer;
 }
 
@@ -201,7 +199,8 @@ main {
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: white;
+  background-color: var(--secondary-color);
+  color: white;
   padding: 1rem;
   max-height: 100%;
   transform: translateY(-115%);
@@ -212,4 +211,33 @@ main {
 
 .movie:hover .overview {
   transform: translateY(0);
+}
+
+#tag {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  /* background-color: red; */
+  gap: 20px;
+  width: 80%;
+  margin-left: 200px;
+}
+
+.tags {
+  /* background-color: blue; */
+  border-radius: 20px;
+  padding: 15px;
+  display: inline-block;
+
+  cursor: pointer;
+  color: lightslategray;
+  border: 2px solid lightslategrey;
+  transition: transform 0.6s ease;
+}
+
+.tags:hover {
+  transform: translateY(-4px);
+  background-color: rgb(182, 14, 14);
+  box-shadow: 5px 5px 10px rgba(159, 159, 159, 0.5);
 }
