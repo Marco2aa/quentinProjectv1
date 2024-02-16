@@ -6,6 +6,16 @@ const main = document.getElementById("main");
 const upcomingMovies = document.getElementById("upcoming");
 const apiKey = "82852eff9923affa42136eb1e81e3ffd";
 const tag = document.getElementById("tag");
+const baseApi =
+  "https://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc";
+const options = {
+  method: "GET",
+  headers: {
+    accept: "application/json",
+    Authorization:
+      "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI4Mjg1MmVmZjk5MjNhZmZhNDIxMzZlYjFlODFlM2ZmZCIsInN1YiI6IjY1Y2RkNmU5YjA0NjA1MDE4M2RhYjk0NyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.bwdP5nw2Mhimz_wkql8DWsgnNf1hluW2gqV514K7GsM",
+  },
+};
 
 const genres = [
   {
@@ -93,14 +103,6 @@ document.addEventListener("DOMContentLoaded", () => {
 btn.addEventListener("click", () => {
   main.innerHTML = "";
   const url = `https://api.themoviedb.org/3/search/movie?query=${search.value}`;
-  const options = {
-    method: "GET",
-    headers: {
-      accept: "application/json",
-      Authorization:
-        "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI4Mjg1MmVmZjk5MjNhZmZhNDIxMzZlYjFlODFlM2ZmZCIsInN1YiI6IjY1Y2RkNmU5YjA0NjA1MDE4M2RhYjk0NyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.bwdP5nw2Mhimz_wkql8DWsgnNf1hluW2gqV514K7GsM",
-    },
-  };
 
   fetch(url, options)
     .then((res) => res.json())
@@ -150,14 +152,7 @@ function getColor(vote) {
 upcomingMovies.addEventListener("click", () => {
   main.innerHTML = "";
   const url = `https://api.themoviedb.org/3/trending/tv/week`;
-  const options = {
-    method: "GET",
-    headers: {
-      accept: "application/json",
-      Authorization:
-        "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI4Mjg1MmVmZjk5MjNhZmZhNDIxMzZlYjFlODFlM2ZmZCIsInN1YiI6IjY1Y2RkNmU5YjA0NjA1MDE4M2RhYjk0NyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.bwdP5nw2Mhimz_wkql8DWsgnNf1hluW2gqV514K7GsM",
-    },
-  };
+
   fetch(url, options)
     .then((res) => res.json())
     .then((json) => {
@@ -187,10 +182,10 @@ upcomingMovies.addEventListener("click", () => {
     .catch((err) => console.error("error:" + err));
 });
 
-let selectedGenre = [];
 setGenre();
 
 function setGenre() {
+  let selectedGenre = [];
   tag.innerHTML = "";
   genres.forEach((genre) => {
     const tags = document.createElement("div");
@@ -214,27 +209,52 @@ function setGenre() {
         }
       }
       console.log(selectedGenre);
+      main.innerHTML = "";
+      getMovie(baseApi + "&with_genres=" + encodeURI(selectedGenre.join(",")));
     });
   });
 }
 
 function trendingMovie() {
   main.innerHTML = "";
-  const url = `https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en-US&page=1&sort_by=popularity.desc'`;
-  const options = {
-    method: "GET",
-    headers: {
-      accept: "application/json",
-      Authorization:
-        "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI4Mjg1MmVmZjk5MjNhZmZhNDIxMzZlYjFlODFlM2ZmZCIsInN1YiI6IjY1Y2RkNmU5YjA0NjA1MDE4M2RhYjk0NyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.bwdP5nw2Mhimz_wkql8DWsgnNf1hluW2gqV514K7GsM",
-    },
-  };
+  const url = `https://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc'`;
+
   fetch(url, options)
     .then((res) => res.json())
     .then((json) => {
       console.log(json.results);
       data = json.results;
 
+      data.forEach((movies) => {
+        const movieDiv = document.createElement("div");
+        const { title, poster_path, vote_average, overview } = movies;
+        movieDiv.classList.add("movie");
+        movieDiv.innerHTML = `<img src="${
+          imgUrl + poster_path
+        }" alt="${title}" />
+
+                            <div class="movie-info">
+                            <h3>${title}</h3>
+                            <span class="${getColor(
+                              vote_average
+                            )}">${vote_average}</span>
+                            </div>
+                            <div class="overview">
+                            <h3>${title}</h3>
+                            ${overview}
+                            </div>`;
+        main.appendChild(movieDiv);
+      });
+    })
+    .catch((err) => console.error("error:" + err));
+}
+
+function getMovie(url) {
+  fetch(url, options)
+    .then((res) => res.json())
+    .then((json) => {
+      console.log(json.results);
+      data = json.results;
       data.forEach((movies) => {
         const movieDiv = document.createElement("div");
         const { title, poster_path, vote_average, overview } = movies;
