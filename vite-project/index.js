@@ -6,6 +6,7 @@ const main = document.getElementById("main");
 const upcomingMovies = document.getElementById("upcoming");
 const apiKey = "82852eff9923affa42136eb1e81e3ffd";
 const tag = document.getElementById("tag");
+const baseUrl = 'https://api.themoviedb.org/3';
 const baseApi =
   "https://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc";
 const options = {
@@ -113,7 +114,7 @@ btn.addEventListener("click", () => {
       data
         .forEach((movie) => {
           const movieDiv = document.createElement("div");
-          const { title, poster_path, vote_average, overview } = movie;
+          const { title, poster_path, vote_average, overview,id } = movie;
           movieDiv.classList.add("movie");
           movieDiv.innerHTML = `<img src="${
             imgUrl + poster_path
@@ -128,9 +129,18 @@ btn.addEventListener("click", () => {
                             <div class="overview">
                             <h3>${title}</h3>
                             ${overview}
+                            <br/>
+                            <button class="knowmore" id="${id}">En savoir plus</button>
+                            
                             </div>`;
           main.appendChild(movieDiv);
+
+          document.getElementById(id).addEventListener('click',()=>{
+            console.log(id);
+            let serie ='movie';
+            openNav(movie,serie);
         })
+      })
         .catch((err) => console.error("error:" + err));
     });
 });
@@ -161,7 +171,7 @@ upcomingMovies.addEventListener("click", () => {
 
       data.forEach((series) => {
         const movieDiv = document.createElement("div");
-        const { name, poster_path, vote_average, overview } = series;
+        const { name, poster_path, vote_average, overview,id } = series;
         movieDiv.classList.add("movie");
         movieDiv.innerHTML = `<img src="${
           imgUrl + poster_path
@@ -175,17 +185,25 @@ upcomingMovies.addEventListener("click", () => {
                               <div class="overview">
                               <h3>${name}</h3>
                               ${overview}
+                              <br/>
+                              <button class="knowmore" id="${id}">En savoir plus</button>
                               </div>`;
         main.appendChild(movieDiv);
+
+        document.getElementById(id).addEventListener('click',()=>{
+          console.log(id);
+          let serie ='tv';
+          openNav(series,serie);
       });
     })
+  })
     .catch((err) => console.error("error:" + err));
 });
 
 setGenre();
 
+let selectedGenre = [];
 function setGenre() {
-  let selectedGenre = [];
   tag.innerHTML = "";
   genres.forEach((genre) => {
     const tags = document.createElement("div");
@@ -211,9 +229,24 @@ function setGenre() {
       console.log(selectedGenre);
       main.innerHTML = "";
       getMovie(baseApi + "&with_genres=" + encodeURI(selectedGenre.join(",")));
+      // highlightedSelection();
     });
   });
 }
+
+function highlightedSelection(){
+  const tags =document.querySelectorAll('.tags')
+  tags.foreach(tag=>{
+    tag.classList.remove('highlight')
+  })
+  if(selectedGenre.length != 0){
+    selectedGenre.forEach(id=>{
+      const highlightedTag = document.getElementById(id);
+      highlightedTag.classList.add('highlight');
+    })
+}
+
+  }
 
 function trendingMovie() {
   main.innerHTML = "";
@@ -227,7 +260,7 @@ function trendingMovie() {
 
       data.forEach((movies) => {
         const movieDiv = document.createElement("div");
-        const { title, poster_path, vote_average, overview } = movies;
+        const { title, poster_path, vote_average, overview,id } = movies;
         movieDiv.classList.add("movie");
         movieDiv.innerHTML = `<img src="${
           imgUrl + poster_path
@@ -242,8 +275,16 @@ function trendingMovie() {
                             <div class="overview">
                             <h3>${title}</h3>
                             ${overview}
+                            <br/>
+                              <button class="knowmore" id="${id}">En savoir plus</button>
                             </div>`;
         main.appendChild(movieDiv);
+
+        document.getElementById(id).addEventListener('click',()=>{
+          // console.log(id);
+          let type = 'movie';
+          openNav(movies,type);
+        })
       });
     })
     .catch((err) => console.error("error:" + err));
@@ -257,7 +298,7 @@ function getMovie(url) {
       data = json.results;
       data.forEach((movies) => {
         const movieDiv = document.createElement("div");
-        const { title, poster_path, vote_average, overview } = movies;
+        const { title, poster_path, vote_average, overview,id } = movies;
         movieDiv.classList.add("movie");
         movieDiv.innerHTML = `<img src="${
           imgUrl + poster_path
@@ -272,9 +313,119 @@ function getMovie(url) {
                             <div class="overview">
                             <h3>${title}</h3>
                             ${overview}
+                            <br/>
+                            <button class="knowmore" id="${id}">En savoir plus</button>
                             </div>`;
         main.appendChild(movieDiv);
+
+        document.getElementById(id).addEventListener('click',()=>{
+          console.log(id);
+          let type = 'movie';
+          openNav(movies,type);
       });
     })
+  })
     .catch((err) => console.error("error:" + err));
 }
+
+const overlaycontent = document.getElementById('overlaycontent');
+
+function openNav(movies,type) {
+  let id = movies.id;
+  fetch(baseUrl + '/'+type+'/'+id+'/videos?',options).then((res) =>res.json())
+  .then(videoData =>{
+    console.log(videoData);
+    if(videoData){
+      document.getElementById("myNav").style.width = "100%";
+      if(videoData.results.length > 0){
+        let movielements = [];
+        let dots = [];
+        videoData.results.forEach((video, index) =>{
+          let{name, key , site } = video
+
+          if(site =='YouTube'){
+
+            movielements.push(`
+            <iframe width="560" height="315" src="https://www.youtube.com/embed/${key}" title="${name}" class="embed hide" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+            `)
+            
+            dots.push(`
+              <span class="dot">${index+1}</span>
+            `)
+          }
+        })
+
+        let content=`
+        <h1 id="videotitle">${movies.original_title}</h1>
+        <br/>
+        <div id="divyoutube">
+        ${movielements.join('')}
+        </div>
+        <br/>
+
+        <div class="dots">${dots.join('')}</div>
+        `
+
+        overlaycontent.innerHTML =content
+        slide = 0;
+        showVideos();
+        
+      }else{
+        overlaycontent.innerHTML = `<h1>Aucun résultat</h1>`
+        
+      }
+
+    }
+  })
+}
+
+function closeNav() {
+  document.getElementById("myNav").style.width = "0%";
+}
+let slide = 0;
+let totalVideos = 0;
+
+function showVideos(){
+  let embedClasses = document.querySelectorAll('.embed');
+  let dots = document.querySelectorAll('.dot')
+  totalVideos = embedClasses.length;
+  embedClasses.forEach((embedTag,index) => {
+    if(slide == index){
+      embedTag.classList.add('show');
+      embedTag.classList.remove('hide');
+    }else{
+      embedTag.classList.add('hide');
+      embedTag.classList.remove('show');
+
+    }
+  })
+
+  dots.forEach((dot,index) => {
+    if(slide == index){
+      dot.classList.add('active');
+    }else{
+      dot.classList.remove('active')
+    }
+  })
+}
+
+const leftArrow = document.getElementById('left-arrow');
+const rightArrow = document.getElementById('right-arrow');
+
+leftArrow.addEventListener('click', () => {
+  if(slide>0){
+    slide --;
+  }else{
+    slide = totalVideos - 1;
+  }
+  showVideos();
+})
+
+rightArrow.addEventListener('click', () => {
+  if(slide < (totalVideos - 1)){
+    slide ++;
+  }else{
+    slide = 0;
+  }
+  showVideos();
+})
